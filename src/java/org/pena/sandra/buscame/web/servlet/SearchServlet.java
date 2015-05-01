@@ -9,12 +9,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.pena.sandra.buscame.db.IndexerDB;
 import org.pena.sandra.buscame.model.Result;
 
 /**
@@ -38,14 +41,21 @@ public class SearchServlet extends HttpServlet {
 
         String word = request.getParameter("editbox_search");
         List<Result> results = new LinkedList<Result>();
-        results.add(new Result("Documento que contiene " + word));
-        request.setAttribute("results", results);
-
-        // Metemos los resultados en una variable results
-        request.setAttribute("results", results);
-
+        String destination = "/index.jsp";
+        try {
+            IndexerDB indexer = new IndexerDB();
+            indexer.configureDB();
+            indexer.save(word);
+            results = indexer.find(word);
+            request.setAttribute("results", results);
+        } catch (Exception ex) {
+           // Aca redireccionar a la pagina de error
+           request.setAttribute("error", ex.toString());
+           destination = "/error.jsp";
+        }
+        
         ServletContext app = this.getServletContext();
-        RequestDispatcher disp = app.getRequestDispatcher("/index.jsp");
+        RequestDispatcher disp = app.getRequestDispatcher(destination);
         disp.forward(request, response);
     }
 
