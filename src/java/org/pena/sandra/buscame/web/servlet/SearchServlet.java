@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pena.sandra.web.servlet;
+package org.pena.sandra.buscame.web.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
