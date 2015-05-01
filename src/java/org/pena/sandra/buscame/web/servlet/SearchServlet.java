@@ -40,14 +40,14 @@ public class SearchServlet extends HttpServlet {
         // Aqui consultariamos a la base de datos que conoce para cada palabra, los resultados
 
         String word = request.getParameter("editbox_search");
-        List<Result> results = new LinkedList<Result>();
-        String destination = "/index.jsp";
+        String destination;
         try {
-            IndexerDB indexer = new IndexerDB();
-            indexer.configureDB();
-            indexer.save(word);
-            results = indexer.find(word);
+            IndexerDB indexerdb = new IndexerDB();
+            indexerdb.configureDB();
+            indexerdb.save(word);
+            List<Result> results = indexerdb.find(word);
             request.setAttribute("results", results);
+            destination = "/index.jsp";
         } catch (Exception ex) {
            // Aca redireccionar a la pagina de error
            request.setAttribute("error", ex.toString());

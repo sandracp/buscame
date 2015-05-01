@@ -6,5 +6,5 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="top.jsp"/>
-    ${error};
+    ${error}
 <jsp:include page="bottom.jsp"/>
