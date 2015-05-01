@@ -5,21 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-       <div id="main">
-                <div class="center">
+<jsp:include page="top.jsp"/>
                     <div class="searchform">
                         <form id="formsearch" name="formsearch" method="get" action="IndexerServlet">
                            <input type="file" id="directory-to-index" name="directory-to-index" webkitdirectory directory multiple/>
                         </form>
                     </div>
-                </div>
-       </div>
-    </body>
-</html>
+<jsp:include page="bottom.jsp"/>
