@@ -7,14 +7,19 @@ package org.pena.sandra.web.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.pena.sandra.buscame.model.Result;
 
 /**
  *
- * @author javier
+ * @author sandra
  */
 public class SearchServlet extends HttpServlet {
 
@@ -29,19 +34,19 @@ public class SearchServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SearchServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet SearchServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        // Aqui consultariamos a la base de datos que conoce para cada palabra, los resultados
+
+        String word = request.getParameter("editbox_search");
+        List<Result> results = new LinkedList<Result>();
+        results.add(new Result("Documento que contiene " + word));
+        request.setAttribute("results", results);
+
+        // Metemos los resultados en una variable results
+        request.setAttribute("results", results);
+
+        ServletContext app = this.getServletContext();
+        RequestDispatcher disp = app.getRequestDispatcher("/index.jsp");
+        disp.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
