@@ -5,16 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-                </div>
-                <div class="leftmenu">
-                    <div class="nav">
-                        <ul>
-                            <li><a href="index.jsp">Home</a></li>
-                            <li><a href="indexer.jsp">Indexer</a></li>
-                            <li><a href="#">Acerca de</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <div id="prefooter">
