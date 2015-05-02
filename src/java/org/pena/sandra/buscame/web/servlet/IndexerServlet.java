@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.pena.sandra.buscame.rules.DocumentParser;
+import org.pena.sandra.buscame.rules.Indexer;
 
 /**
  *
@@ -41,7 +41,7 @@ public class IndexerServlet extends HttpServlet {
             String dirPath = request.getParameter("directory-to-index");
             dirPath = "/home/javier/src/sandra/buscame/DocumentosTP2";
             DateTime start = DateTime.now();
-            DocumentParser documentParser = new DocumentParser();
+            Indexer documentParser = new Indexer();
             String[] files = request.getParameterValues("files-to-index");
             System.out.println("=============ssss===================");
             System.out.println(files.length);

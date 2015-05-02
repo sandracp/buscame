@@ -5,10 +5,13 @@
  */
 package org.pena.sandra.buscame.rules;
 
+import java.util.List;
+import java.util.Vector;
+
 /**
  *
  * @author sandra
  */
 public class Searcher {
-    
+  
 }

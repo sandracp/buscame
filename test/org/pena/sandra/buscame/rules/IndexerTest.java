@@ -25,9 +25,9 @@ import org.pena.sandra.buscame.model.Vocabulary;
  *
  * @author sandra
  */
-public class DocumentParserTest {
+public class IndexerTest {
     
-    public DocumentParserTest() {
+    public IndexerTest() {
     }
     
     @BeforeClass
@@ -49,13 +49,13 @@ public class DocumentParserTest {
     }
 
     /**
-     * Test of parseFiles method, of class DocumentParser.
+     * Test of parseFiles method, of class Indexer.
      */
     @Test
     public void testParseFiles() throws Exception {
         String dir = "/home/javier/src/sandra/buscame/DocumentosTP1";
         String[] files = new String[] {};
-        DocumentParser instance = new DocumentParser();
+        Indexer instance = new Indexer();
         HashMap<String, Vocabulary> allTerms = instance.parseFiles(dir, files);
         assertEquals(2008319, allTerms.size());
     }
@@ -73,7 +73,7 @@ public class DocumentParserTest {
         writeText(dir, "buscame-test1.txt", "Mi texto es asi\nMi resultado es 6");
         String[] files = new String[] {"buscame-test1.txt"};
         
-        DocumentParser instance = new DocumentParser();
+        Indexer instance = new Indexer();
         HashMap<String, Vocabulary> vocabulary = instance.parseFiles(dir, files);
         assertEquals(6, vocabulary.size());
     }
@@ -86,7 +86,7 @@ public class DocumentParserTest {
         
         String[] files = new String[] {"buscame-test2.txt", "buscame-test3.txt"};
         
-        DocumentParser instance = new DocumentParser();
+        Indexer instance = new Indexer();
         HashMap<String, Vocabulary> vocabulary = instance.parseFiles(dir, files);
         assertEquals(11, vocabulary.size());
         

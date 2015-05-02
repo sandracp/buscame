@@ -14,8 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import org.h2.tools.DeleteDbFiles;
 import org.pena.sandra.buscame.model.Post;
-import org.pena.sandra.buscame.model.Result;
-
 /**
  *
  * @author sandra
@@ -38,6 +36,7 @@ public class IndexerDB {
         if (conn == null || conn.isClosed()) {
             conn = DriverManager.getConnection(
             String.format(pathFormat, fileName), "sa", "");
+            conn.setAutoCommit(false);
         }
         return conn;
     }
@@ -50,7 +49,7 @@ public class IndexerDB {
         try (Statement statement = getConnection().createStatement()) {
             try {
                 statement.execute("create table if not exists posteo(id int auto_increment primary key, word varchar(255), document varchar(255), tf int);");
-                getConnection().close();
+                this.commit();
             } catch (SQLException sqle) {
                 System.out.println("Table couldn't be created");
             }
@@ -63,7 +62,6 @@ public class IndexerDB {
                 post.getWord(), post.getDocument(), post.getTf());
         int result = statement.executeUpdate(query);
         statement.close();
-        getConnection().close();
     }
 
     public List<Post> get(String word) throws Exception {
@@ -79,12 +77,24 @@ public class IndexerDB {
                 results.add(post);
             }
         }
-        
-        getConnection().close();
         return results;
     }
     
     public static void deleteDatabase() {
         DeleteDbFiles.execute("~", fileName, true);
+    }
+    
+    public synchronized void commit() {
+        try {
+            this.conn.commit();
+        } catch (SQLException ex) {
+        }
+    }
+
+    public synchronized void close() {
+        try {
+            this.conn.close();
+        } catch (SQLException ex) {
+        }
     }
 }
