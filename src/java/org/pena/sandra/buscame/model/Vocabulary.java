@@ -13,7 +13,6 @@ import java.util.TreeSet;
  * @author sandra
  */
 public class Vocabulary {
-    private HashMap<String, Post> posts;
     private String term; 
     private int nr;
     private int maxTf;
@@ -22,7 +21,6 @@ public class Vocabulary {
         this.term = term;
         this.maxTf = 0;
         this.nr = 0;
-        this.posts = new HashMap<>();
     }
     
     public String getTerm() {
@@ -50,10 +48,6 @@ public class Vocabulary {
     public void setNr(int nr) {
         this.nr = nr;
     }
-
-    public HashMap<String, Post> getPosts() {
-        return posts;
-    }
     
     @Override
     public boolean equals( Object other ) {
@@ -74,11 +68,7 @@ public class Vocabulary {
                 .append(nr)
                 .append(", maxTf=")
                 .append(maxTf)
-                .append(" [posts=");
-        for(String key: posts.keySet()) {
-             sb.append(posts.get(key)).append(", ");
-        }
-        sb.append("]}");
+                .append("}");
         return sb.toString();
     }
     

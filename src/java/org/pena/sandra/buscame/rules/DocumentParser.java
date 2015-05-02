@@ -13,11 +13,13 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import org.pena.sandra.buscame.db.IndexerDB;
 import org.pena.sandra.buscame.model.Post;
 import org.pena.sandra.buscame.model.Vocabulary;
 
@@ -29,6 +31,7 @@ import org.pena.sandra.buscame.model.Vocabulary;
 public class DocumentParser {
 
     private HashMap<String, Vocabulary> allTerms; //to hold all terms
+    private HashMap<String, Post> n;
 
     public DocumentParser() {
         allTerms = new HashMap<String, Vocabulary>(); //to hold all terms
@@ -42,7 +45,7 @@ public class DocumentParser {
      * @throws IOException
      */
     @SuppressWarnings("empty-statement")
-    public HashMap<String, Vocabulary> parseFiles(String dirPath, final String[] filesNames) throws FileNotFoundException, IOException {
+    public HashMap<String, Vocabulary> parseFiles(String dirPath, final String[] filesNames) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         BufferedReader in = null;
         File dir = new File(dirPath);
         File[] files;
@@ -62,10 +65,12 @@ public class DocumentParser {
         
         for (File f : files) {
             String fileName = f.getName();
-            if (f.getName().endsWith(".txt")) {
+            if (fileName.endsWith(".txt")) {
                 in = new BufferedReader(new FileReader(f));
                 StringBuilder sb = new StringBuilder();
-                String s = null;
+                String s;
+                HashMap<String, Post> posts = new HashMap<>();
+
                 while ((s = in.readLine()) != null) {
                     sb.append(s); //acumulo todas las lineas del archivo
                 }
@@ -79,20 +84,22 @@ public class DocumentParser {
                         allTerms.put(term, voc); //Agrego nuevo vocabulario a la lista
                     }
 
-                    HashMap<String, Post> posts = voc.getPosts(); //Obtengo posteos del vocabulario. Primera vez es vacio
-
                     Post post;
-                    if (posts.containsKey(fileName)) {
-                        post = posts.get(fileName); //Obtengo posteo de la palabra
+                    if (posts.containsKey(term)) {
+                        post = posts.get(term); //Obtengo posteo de la palabra
                     } else { //Creo nuevo posteo. Relaciono nuevo vocabulario con documento
-                        post = new Post(fileName);
+                        post = new Post(term, fileName, 0);
                         voc.setNr(voc.getNr() + 1); //Incremento la cantidad de archivos en los que encuentro la palabra
-                        posts.put(fileName, post);
+                        posts.put(term, post);
                     }
                     int tf = post.incrementTf(); 
                     if (tf > voc.getMaxTf()) { //pregunto por el maximo Tf del documento
                         voc.setMaxTf(tf); //actualizo el maximo Tf
                     }
+                }
+                
+                for (Post post: posts.values()) {
+                    IndexerDB.getInstance().save(post);
                 }
             }
         }

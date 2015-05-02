@@ -10,12 +10,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.pena.sandra.buscame.db.IndexerDB;
+import org.pena.sandra.buscame.model.Post;
 import org.pena.sandra.buscame.model.Vocabulary;
 
 /**
@@ -37,10 +40,12 @@ public class DocumentParserTest {
     
     @Before
     public void setUp() {
+        IndexerDB.fileName = "buscame-test"; 
     }
     
     @After
     public void tearDown() {
+        IndexerDB.deleteDatabase();
     }
 
     /**
@@ -85,9 +90,10 @@ public class DocumentParserTest {
         HashMap<String, Vocabulary> vocabulary = instance.parseFiles(dir, files);
         assertEquals(11, vocabulary.size());
         
-        for(String key: vocabulary.keySet()) {
-            System.out.println(vocabulary.get(key));
-        }
+        List<Post> posteos = IndexerDB.getInstance().get("Mi");
+        assertEquals("Mi", posteos.get(0).getWord());
+        assertEquals("buscame-test2.txt", posteos.get(0).getDocument());
+        assertEquals(2, posteos.get(0).getTf());
     }
     
 }

@@ -42,11 +42,7 @@ public class SearchServlet extends HttpServlet {
         String word = request.getParameter("editbox_search");
         String destination;
         try {
-            IndexerDB indexerdb = new IndexerDB();
-            indexerdb.configureDB();
-            indexerdb.save(word);
-            List<Result> results = indexerdb.find(word);
-            request.setAttribute("results", results);
+            //request.setAttribute("results", results);
             destination = "/index.jsp";
         } catch (Exception ex) {
            // Aca redireccionar a la pagina de error

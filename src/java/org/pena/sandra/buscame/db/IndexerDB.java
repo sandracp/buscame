@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
+import org.h2.tools.DeleteDbFiles;
+import org.pena.sandra.buscame.model.Post;
 import org.pena.sandra.buscame.model.Result;
 
 /**
@@ -19,44 +21,70 @@ import org.pena.sandra.buscame.model.Result;
  * @author sandra
  */
 public class IndexerDB {
-    String path = String.format("jdbc:h2:%s", "~/buscame");
-    public IndexerDB() throws ClassNotFoundException {
+    public static String pathFormat = "jdbc:h2:~/%s";
+    public static String fileName;
+    private static IndexerDB instance;
+    private Connection conn;
+    
+    public static IndexerDB getInstance () throws ClassNotFoundException, SQLException {
+        if (instance == null) {
+            instance = new IndexerDB();
+            instance.configureDB();
+        }
+        return instance;
+    }
+    
+    private Connection getConnection () throws SQLException {
+        if (conn == null || conn.isClosed()) {
+            conn = DriverManager.getConnection(
+            String.format(pathFormat, fileName), "sa", "");
+        }
+        return conn;
+    }
+    
+    public IndexerDB() throws ClassNotFoundException, SQLException {
         Class.forName("org.h2.Driver");
     }
 
     public void configureDB() throws ClassNotFoundException, SQLException {
-        Connection conn = DriverManager.getConnection(path, "sa", "");
-        Statement statement = conn.createStatement();
-        try {
-            statement.execute("create table if not exists words(id int auto_increment primary key, name varchar(255));");
-        } catch (SQLException sqle) {
-            System.out.println("Table couldn't be created");
-        }
+        try (Statement statement = getConnection().createStatement()) {
+            try {
+                statement.execute("create table if not exists posteo(id int auto_increment primary key, word varchar(255), document varchar(255), tf int);");
+                getConnection().close();
+            } catch (SQLException sqle) {
+                System.out.println("Table couldn't be created");
+            }
+        }    
+    }
+
+    public void save(Post post)  throws SQLException {
+        Statement statement = getConnection().createStatement();
+        String query = String.format("insert into posteo(word, document, tf) values ('%s', '%s', %d);",
+                post.getWord(), post.getDocument(), post.getTf());
+        int result = statement.executeUpdate(query);
         statement.close();
-        conn.close();
+        getConnection().close();
     }
 
-    public void save(String word) throws SQLException {
-        Connection conn = DriverManager.getConnection(path, "sa", "");
-        Statement statement = conn.createStatement();
-        String query = String.format("insert into words(name) values ('%s');",
-                word);
-        statement.execute(query);
-        conn.close();
-    }
-
-    public List<Result> find(String word) throws Exception {
-        Connection conn = DriverManager.getConnection(path, "sa", "");
-        Statement statement = conn.createStatement();
-        String query = String.format("select * from words where name='%s'", word);
-        ResultSet r = statement.executeQuery(query);
-        List<Result> results = new LinkedList<Result>();
-        while (r.next()) {
-            results.add(new Result(r.getString("name")));
+    public List<Post> get(String word) throws Exception {
+        Statement statement = getConnection().createStatement();
+        String query = String.format("select * from posteo where word='%s'", word);
+        List<Post> results;
+        try (ResultSet r = statement.executeQuery(query)) {
+            results = new LinkedList<>();
+            while (r.next()) {
+                Post post= new Post(r.getString("word"), 
+                        r.getString("document"),
+                        r.getInt("tf"));
+                results.add(post);
+            }
         }
         
-        r.close();
-        conn.close();
+        getConnection().close();
         return results;
+    }
+    
+    public static void deleteDatabase() {
+        DeleteDbFiles.execute("~", fileName, true);
     }
 }

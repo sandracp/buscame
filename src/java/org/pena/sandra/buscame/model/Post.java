@@ -10,16 +10,18 @@ package org.pena.sandra.buscame.model;
  * @author sandra
  */
 public class Post implements Comparable {
+    private String word;
     private String document;
     private int tf;
 
-    public Post(String document, int tf) {
+    public Post(String word, String document, int tf) {
+        this.word = word;
         this.document = document;
         this.tf = tf;
     }
 
-    public Post(String document) {
-        this(document, 0);
+    public Post(String word, String document) {
+        this(word, document, 0);
     }
 
     public String getDocument() {
@@ -46,11 +48,18 @@ public class Post implements Comparable {
 
     @Override
     public String toString() {
-        return String.format("%s (tf=%d)", document, tf);
+        return String.format("%s, %s (tf=%d)", word, document, tf);
     }
 
     public int incrementTf() {
         tf += 1;
         return tf;
+    }
+      public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
     }
 }
