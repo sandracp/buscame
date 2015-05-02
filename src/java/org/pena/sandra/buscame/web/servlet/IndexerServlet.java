@@ -6,6 +6,7 @@
 package org.pena.sandra.buscame.web.servlet;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -13,6 +14,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.pena.sandra.buscame.rules.DocumentParser;
 
 /**
  *
@@ -34,8 +38,34 @@ public class IndexerServlet extends HttpServlet {
             throws ServletException, IOException {
         String destination;
         try {
-            String result = "Termine de indexar: " + request.getParameter("directory-to-index");
-            request.setAttribute("result", result);
+            String dirPath = request.getParameter("directory-to-index");
+            dirPath = "/home/javier/src/sandra/buscame/DocumentosTP2";
+            DateTime start = DateTime.now();
+            DocumentParser documentParser = new DocumentParser();
+            String[] files = request.getParameterValues("files-to-index");
+            System.out.println("=============ssss===================");
+            System.out.println(files.length);
+            
+            documentParser.parseFiles(dirPath, files);
+            List<double[]> tfIdf= documentParser.tfIdfCalculator();
+            
+            for (double[] list : tfIdf) {
+                System.out.println("-------------");
+                StringBuilder sb = new StringBuilder();
+                for (double item : list) {
+                    sb.append(String.format("%f ", item));
+                }
+                System.out.println(sb.toString());
+                System.out.println("-------------");
+            }
+            
+            System.out.println("================================");
+            
+            DateTime end = DateTime.now();
+            Duration duration = new Duration(start, end);
+            request.setAttribute("duration", duration.getStandardSeconds());
+            //request.setAttribute("tfIdf", tfIdf);
+            //request.setAttribute("tfIdfSize", tfIdf.size());
             destination = "/indexer.jsp";
         } catch (Exception ex) {
             // Aca redireccionar a la pagina de error
