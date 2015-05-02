@@ -9,14 +9,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-
+import org.pena.sandra.buscame.model.Post;
+import org.pena.sandra.buscame.model.Term;
 
 /**
  * Class to read documents
@@ -24,61 +27,76 @@ import java.util.List;
  * @author sandra
  */
 public class DocumentParser {
-    //This variable will hold all terms of each document in an array.
-    private List<String[]> termsDocsArray = new ArrayList<String[]>();
-    private HashSet<String> allTerms = new HashSet<String>(); //to hold all terms
-    private List<double[]> tfidfDocsVector = new ArrayList<double[]>();
+
+    private HashMap<String, Term> allTerms; //to hold all terms
+
+    public DocumentParser() {
+        allTerms = new HashMap<String, Term>(); //to hold all terms
+    }
 
     /**
      * Method to read files and store in array.
+     *
      * @param filePath : source file path
      * @throws FileNotFoundException
      * @throws IOException
      */
     @SuppressWarnings("empty-statement")
-    public void parseFiles(String dir, String[] files) throws FileNotFoundException, IOException {
+    public HashMap<String, Term> parseFiles(String dirPath, final String[] filesNames) throws FileNotFoundException, IOException {
         BufferedReader in = null;
-        int n = 0;
-        for (String fileName : files) {
-            File f = new File(dir, fileName);
-            System.out.println(String.format("File %d: %s", n, f.getName()));
-            n += 1;
+        File dir = new File(dirPath);
+        File[] files;
+        if (filesNames.length == 0) {
+            files = dir.listFiles();
+        } else {
+            files = dir.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    for (String fileName: filesNames) {
+                        if (fileName.equals(name))
+                            return true;
+                    };
+                    return false;
+                }
+            });
+        }
+        
+        for (File f : files) {
+            String fileName = f.getName();
             if (f.getName().endsWith(".txt")) {
-            	in = new BufferedReader(new FileReader(f));
+                in = new BufferedReader(new FileReader(f));
                 StringBuilder sb = new StringBuilder();
                 String s = null;
                 while ((s = in.readLine()) != null) {
                     sb.append(s);
                 }
-                String[] tokenizedTerms = sb.toString().replaceAll("[\\W&&[^\\s]]", "").split("\\W+");   //to get individual terms
+                String[] tokenizedTerms = sb.toString().replaceAll("[\\W&&[^\\s]]", " ").split("\\W+");   //to get individual terms
                 for (String term : tokenizedTerms) {
-                    allTerms.add(term);       
-                }
-                termsDocsArray.add(tokenizedTerms);
-            }
-        }
-    }
+                    Term voc;
+                    if (allTerms.containsKey(term)) {
+                        voc = allTerms.get(term);
+                    } else {
+                        voc = new Term(term);
+                        allTerms.put(term, voc);
+                    }
 
-    /**
-     * Method to create termVector according to its tfidf score.
-     * @return 
-     */
-    public List<double[]> tfIdfCalculator() {
-        double tf; //term frequency
-        double idf; //inverse document frequency
-        double tfidf; //term requency inverse document frequency        
-        for (String[] docTermsArray : termsDocsArray) {
-            double[] tfidfvectors = new double[allTerms.size()];
-            int count = 0;
-            for (String terms : allTerms) {
-                tf = new TfIdf().tfCalculator(docTermsArray, terms);
-                idf = new TfIdf().idfCalculator(termsDocsArray, terms);
-                tfidf = tf * idf;
-                tfidfvectors[count] = tfidf;
-                count++;
+                    HashMap<String, Post> posts = voc.getPosts();
+
+                    Post post;
+                    if (posts.containsKey(fileName)) {
+                        post = posts.get(fileName);
+                    } else {
+                        post = new Post(fileName);
+                        voc.setNr(voc.getNr() + 1);
+                        posts.put(fileName, post);
+                    }
+                    int tf = post.incrementTf();
+                    if (tf > voc.getMaxTf()) {
+                        voc.setMaxTf(tf);
+                    }
+                }
             }
-            tfidfDocsVector.add(tfidfvectors);  //storing document vectors;            
         }
-        return tfidfDocsVector;
+
+        return allTerms;
     }
 }

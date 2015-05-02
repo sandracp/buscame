@@ -47,20 +47,7 @@ public class IndexerServlet extends HttpServlet {
             System.out.println(files.length);
             
             documentParser.parseFiles(dirPath, files);
-            List<double[]> tfIdf= documentParser.tfIdfCalculator();
-            
-            for (double[] list : tfIdf) {
-                System.out.println("-------------");
-                StringBuilder sb = new StringBuilder();
-                for (double item : list) {
-                    sb.append(String.format("%f ", item));
-                }
-                System.out.println(sb.toString());
-                System.out.println("-------------");
-            }
-            
-            System.out.println("================================");
-            
+
             DateTime end = DateTime.now();
             Duration duration = new Duration(start, end);
             request.setAttribute("duration", duration.getStandardSeconds());

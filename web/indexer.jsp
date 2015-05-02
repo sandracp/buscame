@@ -10,6 +10,7 @@
 <div class="searchform">
     <form id="formsearch" name="formsearch" method="get" action="IndexerServlet">
         <input type="file" id="files-to-index" name="files-to-index" webkitdirectory directory multiple/>
+        
         <input type="submit" />
     </form>
     <p>Duration: ${duration}s</p>
