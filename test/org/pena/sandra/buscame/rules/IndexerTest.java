@@ -60,11 +60,20 @@ public class IndexerTest {
         assertEquals(2008319, allTerms.size());
     }
     
+    @Test
+    public void testParseFiles2() throws Exception {
+        String dir = "/home/javier/src/sandra/buscame/DocumentosTP2";
+        String[] files = new String[] {};
+        Indexer instance = new Indexer();
+        HashMap<String, Vocabulary> allTerms = instance.parseFiles(dir, files);
+        assertEquals(370545, allTerms.size());
+    }
+    
     private void writeText(String dir, String fileName, String text) throws IOException {
         File output = new File(dir, fileName);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(output));
-        writer.write(text);
-        writer.close();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
+            writer.write(text);
+        }
     }
     
     @Test

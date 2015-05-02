@@ -8,6 +8,10 @@
         <servlet-name>IndexerServlet</servlet-name>
         <servlet-class>org.pena.sandra.buscame.web.servlet.IndexerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DownloadFileServlet</servlet-name>
+        <servlet-class>org.pena.sandra.buscame.web.servlet.DownloadFileServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>
         <url-pattern>/SearchServlet</url-pattern>
@@ -16,7 +20,10 @@
         <servlet-name>IndexerServlet</servlet-name>
         <url-pattern>/IndexerServlet</url-pattern>
     </servlet-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>DownloadFileServlet</servlet-name>
+        <url-pattern>/DownloadFileServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

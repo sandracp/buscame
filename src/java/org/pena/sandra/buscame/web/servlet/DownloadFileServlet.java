@@ -5,25 +5,26 @@
  */
 package org.pena.sandra.buscame.web.servlet;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import javax.servlet.RequestDispatcher;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.pena.sandra.buscame.rules.Indexer;
+import org.pena.sandra.buscame.model.Post;
 
 /**
  *
  * @author sandra
  */
-@WebServlet(name = "IndexerServlet", urlPatterns = {"/IndexerServlet"})
-public class IndexerServlet extends HttpServlet {
+public class DownloadFileServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,26 +37,23 @@ public class IndexerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String destination;
+        String path = request.getParameter("path");
+        String fileName = request.getParameter("fileName");
+        response.setContentType("text/plain");
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        PrintWriter out = response.getWriter();
+        System.out.println(path);
         try {
-            String dirPath = request.getParameter("directory-to-index");
-            dirPath = "/home/javier/src/sandra/buscame/DocumentosTP2";
-            DateTime start = DateTime.now();
-            Indexer indexer = new Indexer();
-            String[] files = request.getParameterValues("files-to-index");
-            indexer.parseFiles(dirPath, files);
-            DateTime end = DateTime.now();
-            Duration duration = new Duration(start, end);
-            request.setAttribute("duration", duration.getStandardSeconds());
-            destination = "/indexer.jsp";
-        } catch (Exception ex) {
-            // Aca redireccionar a la pagina de error
-           request.setAttribute("error", ex.toString());
-           destination = "/error.jsp";
+            BufferedReader in = new BufferedReader(new FileReader(new File(path)));
+            StringBuilder sb = new StringBuilder();
+            String s;
+            while ((s = in.readLine()) != null) {
+                out.println(s);
+            }
+            out.flush();
+        }finally {
+            out.close();
         }
-        ServletContext app = this.getServletContext();
-        RequestDispatcher disp = app.getRequestDispatcher(destination);
-        disp.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

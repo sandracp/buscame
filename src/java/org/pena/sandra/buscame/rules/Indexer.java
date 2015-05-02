@@ -59,6 +59,7 @@ public class Indexer {
 
         for (File f : files) {
             String fileName = f.getName();
+            String filePath = f.getAbsolutePath();
             if (fileName.endsWith(".txt")) {
                 in = new BufferedReader(new FileReader(f));
                 StringBuilder sb = new StringBuilder();
@@ -83,7 +84,7 @@ public class Indexer {
                         if (posts.containsKey(term)) {
                             post = posts.get(term); //Obtengo posteo de la palabra
                         } else { //Creo nuevo posteo. Relaciono nuevo vocabulario con documento
-                            post = new Post(term, fileName, 0);
+                            post = new Post(term, filePath, 0);
                             voc.setNr(voc.getNr() + 1); //Incremento la cantidad de archivos en los que encuentro la palabra
                             posts.put(term, post);
                         }

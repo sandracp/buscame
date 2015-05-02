@@ -26,6 +26,9 @@ public class IndexerDB {
     
     public static IndexerDB getInstance () throws ClassNotFoundException, SQLException {
         if (instance == null) {
+            if (fileName == null) {
+                fileName = "buscame";
+            }
             instance = new IndexerDB();
             instance.configureDB();
         }

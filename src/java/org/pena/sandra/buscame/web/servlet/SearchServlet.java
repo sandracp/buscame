@@ -6,19 +6,15 @@
 package org.pena.sandra.buscame.web.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.pena.sandra.buscame.db.IndexerDB;
-import org.pena.sandra.buscame.model.Result;
+import org.pena.sandra.buscame.model.Post;
+import org.pena.sandra.buscame.rules.Searcher;
 
 /**
  *
@@ -42,7 +38,8 @@ public class SearchServlet extends HttpServlet {
         String word = request.getParameter("editbox_search");
         String destination;
         try {
-            //request.setAttribute("results", results);
+            List<Post> results = new Searcher().search(word);
+            request.setAttribute("results", results);
             destination = "/index.jsp";
         } catch (Exception ex) {
            // Aca redireccionar a la pagina de error
