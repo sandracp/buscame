@@ -21,6 +21,7 @@ public class Vocabulary {
     public Vocabulary(String term) {
         this.term = term;
         this.maxTf = 0;
+        this.nr = 0;
         this.posts = new HashMap<>();
     }
     

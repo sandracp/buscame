@@ -35,7 +35,7 @@ public class DocumentParser {
     }
 
     /**
-     * Method to read files and store in array.
+     * Method para leer un archivo y almacenar un array.
      *
      * @param filePath : source file path
      * @throws FileNotFoundException
@@ -74,29 +74,29 @@ public class DocumentParser {
                     Vocabulary voc;
                     if (allTerms.containsKey(term)) { //allTerms es todo mi vocabulario
                         voc = allTerms.get(term);
-                    } else {
+                    } else { //termino no existe
                         voc = new Vocabulary(term);
-                        allTerms.put(term, voc);
+                        allTerms.put(term, voc); //Agrego nuevo vocabulario a la lista
                     }
 
                     HashMap<String, Post> posts = voc.getPosts(); //Obtengo posteos del vocabulario. Primera vez es vacio
 
                     Post post;
                     if (posts.containsKey(fileName)) {
-                        post = posts.get(fileName);
-                    } else {
+                        post = posts.get(fileName); //Obtengo posteo de la palabra
+                    } else { //Creo nuevo posteo. Relaciono nuevo vocabulario con documento
                         post = new Post(fileName);
-                        voc.setNr(voc.getNr() + 1); //
+                        voc.setNr(voc.getNr() + 1); //Incremento la cantidad de archivos en los que encuentro la palabra
                         posts.put(fileName, post);
                     }
-                    int tf = post.incrementTf();
-                    if (tf > voc.getMaxTf()) {
-                        voc.setMaxTf(tf);
+                    int tf = post.incrementTf(); 
+                    if (tf > voc.getMaxTf()) { //pregunto por el maximo Tf del documento
+                        voc.setMaxTf(tf); //actualizo el maximo Tf
                     }
                 }
             }
         }
 
-        return allTerms;
+        return allTerms; 
     }
 }
