@@ -16,11 +16,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.pena.sandra.buscame.model.Term;
+import org.pena.sandra.buscame.model.Vocabulary;
 
 /**
  *
- * @author javier
+ * @author sandra
  */
 public class DocumentParserTest {
     
@@ -51,7 +51,7 @@ public class DocumentParserTest {
         String dir = "/home/javier/src/sandra/buscame/DocumentosTP1";
         String[] files = new String[] {};
         DocumentParser instance = new DocumentParser();
-        HashMap<String, Term> allTerms = instance.parseFiles(dir, files);
+        HashMap<String, Vocabulary> allTerms = instance.parseFiles(dir, files);
         assertEquals(2008319, allTerms.size());
     }
     
@@ -69,22 +69,25 @@ public class DocumentParserTest {
         String[] files = new String[] {"buscame-test1.txt"};
         
         DocumentParser instance = new DocumentParser();
-        HashMap<String, Term> vocabulary = instance.parseFiles(dir, files);
+        HashMap<String, Vocabulary> vocabulary = instance.parseFiles(dir, files);
         assertEquals(6, vocabulary.size());
     }
     
     @Test
     public void testParseSmallFiles2() throws Exception {
         String dir = "/tmp";
-        writeText(dir, "buscame-test2.txt", "Mi texto es asi\nMi resultado es 6");
+        writeText(dir, "buscame-test2.txt", "Mi texto es asi \nMi resultado es 6");
         writeText(dir, "buscame-test3.txt", "Otro texto con 5 nuevas palabras");
         
         String[] files = new String[] {"buscame-test2.txt", "buscame-test3.txt"};
         
         DocumentParser instance = new DocumentParser();
-        HashMap<String, Term> vocabulary = instance.parseFiles(dir, files);
+        HashMap<String, Vocabulary> vocabulary = instance.parseFiles(dir, files);
         assertEquals(11, vocabulary.size());
-        assertEquals(11, vocabulary.size());
+        
+        for(String key: vocabulary.keySet()) {
+            System.out.println(vocabulary.get(key));
+        }
     }
     
 }

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import org.pena.sandra.buscame.model.Post;
-import org.pena.sandra.buscame.model.Term;
+import org.pena.sandra.buscame.model.Vocabulary;
 
 /**
  * Class to read documents
@@ -28,10 +28,10 @@ import org.pena.sandra.buscame.model.Term;
  */
 public class DocumentParser {
 
-    private HashMap<String, Term> allTerms; //to hold all terms
+    private HashMap<String, Vocabulary> allTerms; //to hold all terms
 
     public DocumentParser() {
-        allTerms = new HashMap<String, Term>(); //to hold all terms
+        allTerms = new HashMap<String, Vocabulary>(); //to hold all terms
     }
 
     /**
@@ -42,12 +42,12 @@ public class DocumentParser {
      * @throws IOException
      */
     @SuppressWarnings("empty-statement")
-    public HashMap<String, Term> parseFiles(String dirPath, final String[] filesNames) throws FileNotFoundException, IOException {
+    public HashMap<String, Vocabulary> parseFiles(String dirPath, final String[] filesNames) throws FileNotFoundException, IOException {
         BufferedReader in = null;
         File dir = new File(dirPath);
         File[] files;
         if (filesNames.length == 0) {
-            files = dir.listFiles();
+            files = dir.listFiles(); //parseo todos los archivos
         } else {
             files = dir.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
@@ -67,26 +67,26 @@ public class DocumentParser {
                 StringBuilder sb = new StringBuilder();
                 String s = null;
                 while ((s = in.readLine()) != null) {
-                    sb.append(s);
+                    sb.append(s); //acumulo todas las lineas del archivo
                 }
-                String[] tokenizedTerms = sb.toString().replaceAll("[\\W&&[^\\s]]", " ").split("\\W+");   //to get individual terms
-                for (String term : tokenizedTerms) {
-                    Term voc;
-                    if (allTerms.containsKey(term)) {
+                String[] tokenizedTerms = sb.toString().replaceAll("[\\W&&[^\\s]]", " ").split("\\W+");   //obtengo una palabra
+                for (String term : tokenizedTerms) { //recorro los terminos del archivo
+                    Vocabulary voc;
+                    if (allTerms.containsKey(term)) { //allTerms es todo mi vocabulario
                         voc = allTerms.get(term);
                     } else {
-                        voc = new Term(term);
+                        voc = new Vocabulary(term);
                         allTerms.put(term, voc);
                     }
 
-                    HashMap<String, Post> posts = voc.getPosts();
+                    HashMap<String, Post> posts = voc.getPosts(); //Obtengo posteos del vocabulario. Primera vez es vacio
 
                     Post post;
                     if (posts.containsKey(fileName)) {
                         post = posts.get(fileName);
                     } else {
                         post = new Post(fileName);
-                        voc.setNr(voc.getNr() + 1);
+                        voc.setNr(voc.getNr() + 1); //
                         posts.put(fileName, post);
                     }
                     int tf = post.incrementTf();

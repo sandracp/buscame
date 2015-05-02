@@ -10,15 +10,15 @@ import java.util.TreeSet;
 
 /**
  *
- * @author javier
+ * @author sandra
  */
-public class Term {
+public class Vocabulary {
     private HashMap<String, Post> posts;
-    private String term;
+    private String term; 
     private int nr;
     private int maxTf;
 
-    public Term(String term) {
+    public Vocabulary(String term) {
         this.term = term;
         this.maxTf = 0;
         this.posts = new HashMap<>();
@@ -57,8 +57,8 @@ public class Term {
     @Override
     public boolean equals( Object other ) {
         if( this == other ) { return true; }
-        if( other instanceof Term ) {
-            Term v2 = ( Term ) other;
+        if( other instanceof Vocabulary ) {
+            Vocabulary v2 = ( Vocabulary ) other;
             return this.term.equals(v2.term);
         }
         return false;

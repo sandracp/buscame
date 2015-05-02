@@ -7,7 +7,7 @@ package org.pena.sandra.buscame.model;
 
 /**
  *
- * @author javier
+ * @author sandra
  */
 public class Post implements Comparable {
     private String document;
