@@ -80,6 +80,7 @@ public class IndexerDB {
                 results.add(post);
             }
         }
+        close();
         return results;
     }
     
@@ -90,6 +91,7 @@ public class IndexerDB {
     public synchronized void commit() {
         try {
             this.conn.commit();
+            close();
         } catch (SQLException ex) {
         }
     }
