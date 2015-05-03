@@ -6,6 +6,7 @@
 package org.pena.sandra.buscame.web.servlet;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.pena.sandra.buscame.model.Post;
+import org.pena.sandra.buscame.model.Result;
 import org.pena.sandra.buscame.rules.Searcher;
 
 /**
@@ -38,7 +40,7 @@ public class SearchServlet extends HttpServlet {
         String sentence = request.getParameter("editbox_search");
         String destination;
         try {
-            List<Post> results = new Searcher().search(sentence);
+            Collection<Result> results = new Searcher().search(sentence);
             request.setAttribute("results", results);
             destination = "/index.jsp";
         } catch (Exception ex) {

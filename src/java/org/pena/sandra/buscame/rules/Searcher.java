@@ -7,6 +7,7 @@ package org.pena.sandra.buscame.rules;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import static java.util.Collections.list;
 import java.util.Comparator;
@@ -27,13 +28,19 @@ import org.pena.sandra.buscame.model.Vocabulary;
 public class Searcher {
     private final int MAX_POSTS = 10;
 
-    public List<Post> search(String sentence) throws ClassNotFoundException, SQLException {
+    public ArrayList<Result> search(String sentence) throws ClassNotFoundException, SQLException {
         ArrayList<Vocabulary> searchVocabulary = convertSentenceToVocabulary(sentence);     
-        for(Vocabulary voc: searchVocabulary) {
-            System.out.println(voc);
-        }
+        
         List<Post> candidates = getCandidates(searchVocabulary);
-        List<Post> promoted = promoteCandidates(candidates);
+        ArrayList<Result> promoted = promoteCandidates(candidates);
+
+        Collections.sort(promoted, new Comparator<Result>() {
+            @Override
+            public int compare(Result r1, Result r2) {
+                return Double.compare(r2.getWeight(), r1.getWeight());
+            }
+        });
+                
         return promoted;
     }
 
@@ -49,11 +56,9 @@ public class Searcher {
         
         /*1- Se comienza con el término de la consulta que tenga el mayor idf (o sea, la lista de posteo 
         más corta. En nuestro caso, comenzamos por el término con MENOR n r ) */
-        Collections.sort(searchVocabulary, new Comparator() {
+        Collections.sort(searchVocabulary, new Comparator<Vocabulary>() {
             @Override
-            public int compare(Object a, Object b) {
-                Vocabulary first = ((Vocabulary)a);
-                Vocabulary second =((Vocabulary)b);
+            public int compare(Vocabulary first, Vocabulary second) {
                 // menor a mayor Nr
                 return first.getNr() - second.getNr(); 
             }
@@ -61,30 +66,26 @@ public class Searcher {
         return searchVocabulary;
     }
 
-    private List<Post> getCandidates(ArrayList<Vocabulary> searchVocabulary) throws ClassNotFoundException {
+    private List<Post> getCandidates(ArrayList<Vocabulary> searchVocabulary) throws ClassNotFoundException, SQLException {
         List<Post> posts = new LinkedList<>();
         for(Vocabulary voc: searchVocabulary) {
-            try {
-                // 2- y traemos de su lista de posteo los R(MAX_POSTS) primeros documentos
-                
-                // 3- Por otra parte, como el máximo tf está almacenado en cada
-                // término del vocabulario, es posible eliminar términos completos sin siquiera ir al
-                //disco una vez para mirar su lista de posteo.
-                
-                // en que caso el maximo TF hace que ni siquiera vayamos a disco?
-                if (voc.getMaxTf() < 0) {
-                    List<Post> tmpPosts = IndexerDB.getInstance()
-                           .getPostsByWord(voc.getTerm(), MAX_POSTS);
-                    posts.addAll(tmpPosts);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(Searcher.class.getName()).log(Level.SEVERE, null, ex);
+            // 2- y traemos de su lista de posteo los R(MAX_POSTS) primeros documentos
+
+            // 3- Por otra parte, como el máximo tf está almacenado en cada
+            // término del vocabulario, es posible eliminar términos completos sin siquiera ir al
+            //disco una vez para mirar su lista de posteo.
+
+            // en que caso el maximo TF hace que ni siquiera vayamos a disco?
+            if (voc.getMaxTf() > 0) {
+                List<Post> tmpPosts = IndexerDB.getInstance()
+                       .getPostsByWord(voc.getTerm(), MAX_POSTS);
+                posts.addAll(tmpPosts);
             }
         }
         return posts;
     }
 
-    private List<Post> promoteCandidates(List<Post> candidates) throws ClassNotFoundException, SQLException {
+    private ArrayList<Result> promoteCandidates(List<Post> candidates) throws ClassNotFoundException, SQLException {
         
         //4- Para armar el ranking, los documentos se van manteniendo en el orden en que
         //ingresan, pero si al chequear la lista de otro término el mismo documento aparece otra
@@ -92,9 +93,11 @@ public class Searcher {
         HashMap<String, Result> results = new HashMap<>();
         int N = IndexerDB.getInstance().getTotalDocuments();
         HashMap<String, Vocabulary> allVocabulary = IndexerDB.getInstance().allVocabulary;
+        System.out.println(candidates);
         for (Post post: candidates) {
             Vocabulary voc = allVocabulary.get(post.getWord());
-            double weight = post.getTf() * Math.log(N / voc.getNr());
+            double div = (N * 1.0) / (voc.getNr() * 1.0);
+            double weight = post.getTf() * Math.log10(div);
             Result result;
             if (results.containsKey(post.getDocument())) {
                 result = results.get(post.getDocument());
@@ -104,6 +107,6 @@ public class Searcher {
             }
             result.addWeight(weight);
         }
-        return candidates;
+        return new ArrayList<Result>(results.values());
     }
 }

@@ -9,22 +9,23 @@ package org.pena.sandra.buscame.model;
  *
  * @author sandra
  */
-public class Result {
-    private String name;
+public class Result implements Comparable {
+    private String document;
     private double weight;
 
     public Result(String name) {
-        this.name = name;
+        this.document = name;
         this.weight = 0;
     }
-    
-    public void setName(String name) {
-        this.name = name;
+
+    public String getDocument() {
+        return document;
     }
 
-    public String getName() {
-        return name;
+    public void setDocument(String document) {
+        this.document = document;
     }
+
 
     public double getWeight() {
         return weight;
@@ -36,5 +37,11 @@ public class Result {
     
     public void addWeight(double w) {
         this.weight += w;
+    }
+
+    @Override
+    public int compareTo(Object t) {
+        Result res2 = (Result)t;
+        return res2.weight - this.weight;
     }
 }

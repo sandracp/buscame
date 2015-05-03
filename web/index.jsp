@@ -25,7 +25,7 @@
                             
                             <div class="result">
                                 <h2>${fileName}</h2>
-                                <p class="date"><img src="images/comment.gif" alt="" /> <a href="DownloadFileServlet?path=${result.document}&fileName=${fileName}">Download</a> <img src="images/timeicon.gif" alt="" /> ${result.tf}</p>
+                                <p class="date"><img src="images/comment.gif" alt="" /> <a href="DownloadFileServlet?path=${result.document}&fileName=${fileName}">Download</a> <img src="images/timeicon.gif" alt="" /> ${result.weight}</p>
                             </div>
                         </c:forEach>
                     </div>

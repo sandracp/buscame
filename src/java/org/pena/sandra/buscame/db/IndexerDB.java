@@ -47,6 +47,7 @@ public class IndexerDB {
             instance = new IndexerDB();
             instance.configureDB();
             instance.loadVocabulary();
+            instance.countDocuments();
         }
         return instance;
     }
@@ -129,7 +130,7 @@ public class IndexerDB {
         return result;
     }
 
-    public int countDocuments() throws SQLException {
+    public void countDocuments() throws SQLException {
         Statement statement = getConnection().createStatement();
         String query = "select count(distinct document) as c from posteo";
         int result = 0;
@@ -139,7 +140,7 @@ public class IndexerDB {
             }
         }
         close();
-        return result;
+        totalDocuments = result;
     }
 
     public static void deleteDatabase() {
