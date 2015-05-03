@@ -11,7 +11,13 @@ package org.pena.sandra.buscame.model;
  */
 public class Result {
     private String name;
+    private double weight;
 
+    public Result(String name) {
+        this.name = name;
+        this.weight = 0;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -20,8 +26,15 @@ public class Result {
         return name;
     }
 
-    public Result(String name) {
-        this.name = name;
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
     
+    public void addWeight(double w) {
+        this.weight += w;
+    }
 }

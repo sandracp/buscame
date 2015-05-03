@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import static java.util.Collections.list;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.pena.sandra.buscame.db.IndexerDB;
 import org.pena.sandra.buscame.model.Post;
+import org.pena.sandra.buscame.model.Result;
 import org.pena.sandra.buscame.model.Vocabulary;
 
 /**
@@ -82,11 +84,26 @@ public class Searcher {
         return posts;
     }
 
-    private List<Post> promoteCandidates(List<Post> candidates) {
+    private List<Post> promoteCandidates(List<Post> candidates) throws ClassNotFoundException, SQLException {
         
         //4- Para armar el ranking, los documentos se van manteniendo en el orden en que
         //ingresan, pero si al chequear la lista de otro término el mismo documento aparece otra
         //vez, se puede hacer que suba en el ranking general.
+        HashMap<String, Result> results = new HashMap<>();
+        int N = IndexerDB.getInstance().getTotalDocuments();
+        HashMap<String, Vocabulary> allVocabulary = IndexerDB.getInstance().allVocabulary;
+        for (Post post: candidates) {
+            Vocabulary voc = allVocabulary.get(post.getWord());
+            double weight = post.getTf() * Math.log(N / voc.getNr());
+            Result result;
+            if (results.containsKey(post.getDocument())) {
+                result = results.get(post.getDocument());
+            } else {
+                result = new Result(post.getDocument());
+                results.put(post.getDocument(), result);
+            }
+            result.addWeight(weight);
+        }
         return candidates;
     }
 }
