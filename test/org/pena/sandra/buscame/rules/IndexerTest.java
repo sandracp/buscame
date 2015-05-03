@@ -99,13 +99,14 @@ public class IndexerTest {
         instance.parseFiles(dir, files);
         assertEquals(11, IndexerDB.getInstance().allVocabulary.size());
         
-        List<Post> posteos = IndexerDB.getInstance().getPostsByWord("Mi", 1);
-        assertEquals("Mi", posteos.get(0).getWord());
-        assertEquals("/tmp/buscame-test2.txt", posteos.get(0).getDocument());
-        assertEquals(2, posteos.get(0).getTf());
+        List<Post> p1 = IndexerDB.getInstance().getPostsByWord("texto", 1);
+        assertEquals(1, p1.size());
         
-        posteos = IndexerDB.getInstance().getPostsByWord("texto", 1);
-        assertEquals(2, posteos.size());
+        List<Post> p2 = IndexerDB.getInstance().getPostsByWord("mi", 1);
+        assertEquals("mi", p2.get(0).getWord());
+        assertEquals("/tmp/buscame-test2.txt", p2.get(0).getDocument());
+        assertEquals(2, p2.get(0).getTf());
+        
         
     }
     

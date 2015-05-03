@@ -74,18 +74,16 @@ public class IndexerDB {
 
     public List<Post> getPostsByWord(String word, int max) throws SQLException {
         Statement statement = getConnection().createStatement();
-        String query = String.format("select top %d * from posteo where word='%s' order by tf desc", max, word);
+        String query = String.format("select top %d word, document, tf from posteo where word='%s' order by tf desc", max, word);
         List<Post> results= new LinkedList<>();
-        try (ResultSet r = statement.executeQuery(query)) {
-            if (r != null) {
-                while (r.next()) {
-                    Post post= new Post(r.getString("word"), 
-                            r.getString("document"),
-                            r.getInt("tf"));
-                    results.add(post);
-                }
-            }
+        ResultSet r = statement.executeQuery(query);
+        while (r.next()) {
+            Post post= new Post(r.getString("word"), 
+                    r.getString("document"),
+                    r.getInt("tf"));
+            results.add(post);
         }
+        
         close();
         return results;
     }
@@ -109,11 +107,11 @@ public class IndexerDB {
     
     public boolean wasParsed(String document) throws SQLException {
         Statement statement = getConnection().createStatement();
-        String query = "select count(*) as cantidad from posteo where document='%s'";
+        String query = "select count(*) as c from posteo where document='%s'";
         boolean result = false;
         try (ResultSet r = statement.executeQuery(query)) {
             if(r.next()){
-                result = r.getInt("cantidad") > 0;
+                result = r.getInt("c") > 0;
             }
         }
         close();

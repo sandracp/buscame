@@ -40,43 +40,47 @@ public class Indexer {
         for (File f : files) {
             String fileName = f.getName();
             String filePath = f.getAbsolutePath();
-            if (fileName.endsWith(".txt")) {
-                BufferedReader in = new BufferedReader(new FileReader(f));
-                StringBuilder sb = new StringBuilder();
-                String s;
-                HashMap<String, Post> posts = new HashMap<>();
+            if (!IndexerDB.getInstance().wasParsed(filePath)) {
+                System.out.println(f.getAbsolutePath());
+                if (fileName.endsWith(".txt")) {
+                    BufferedReader in = new BufferedReader(new FileReader(f));
+                    StringBuilder sb = new StringBuilder();
+                    String s;
+                    HashMap<String, Post> posts = new HashMap<>();
 
-                while ((s = in.readLine()) != null) {
-                    sb.append(s); //acumulo todas las lineas del archivo
-                }
-                String[] tokenizedTerms = sb.toString().split("\\W");   //obtengo una palabra
-                for (String term : tokenizedTerms) { //recorro los terminos del archivo
-                    if (isValidTerm(term)) {
-                        Vocabulary voc;
-                        if (allVocabulary.containsKey(term)) { //allTerms es todo mi vocabulario
-                            voc = allVocabulary.get(term);
-                        } else { //termino no existe
-                            voc = new Vocabulary(term);
-                            allVocabulary.put(term, voc); //Agrego nuevo vocabulario a la lista
-                        }
+                    while ((s = in.readLine()) != null) {
+                        sb.append(s); //acumulo todas las lineas del archivo
+                    }
+                    String[] tokenizedTerms = sb.toString().split("\\W");   //obtengo una palabra
+                    for (String term : tokenizedTerms) { //recorro los terminos del archivo
+                        term = term.toLowerCase(); // paso todo a minuscula
+                        if (isValidTerm(term)) {
+                            Vocabulary voc;
+                            if (allVocabulary.containsKey(term)) { //allTerms es todo mi vocabulario
+                                voc = allVocabulary.get(term);
+                            } else { //termino no existe
+                                voc = new Vocabulary(term);
+                                allVocabulary.put(term, voc); //Agrego nuevo vocabulario a la lista
+                            }
 
-                        Post post;
-                        if (posts.containsKey(term)) {
-                            post = posts.get(term); //Obtengo posteo de la palabra
-                        } else { //Creo nuevo posteo. Relaciono nuevo vocabulario con documento
-                            post = new Post(term, filePath, 0);
-                            voc.setNr(voc.getNr() + 1); //Incremento la cantidad de archivos en los que encuentro la palabra
-                            posts.put(term, post);
-                        }
-                        int tf = post.incrementTf();
-                        if (tf > voc.getMaxTf()) { //pregunto por el maximo Tf del documento
-                            voc.setMaxTf(tf); //actualizo el maximo Tf
+                            Post post;
+                            if (posts.containsKey(term)) {
+                                post = posts.get(term); //Obtengo posteo de la palabra
+                            } else { //Creo nuevo posteo. Relaciono nuevo vocabulario con documento
+                                post = new Post(term, filePath, 0);
+                                voc.setNr(voc.getNr() + 1); //Incremento la cantidad de archivos en los que encuentro la palabra
+                                posts.put(term, post);
+                            }
+                            int tf = post.incrementTf();
+                            if (tf > voc.getMaxTf()) { //pregunto por el maximo Tf del documento
+                                voc.setMaxTf(tf); //actualizo el maximo Tf
+                            }
                         }
                     }
-                }
 
-                for (Post post : posts.values()) {
-                    IndexerDB.getInstance().save(post);
+                    for (Post post : posts.values()) {
+                        IndexerDB.getInstance().save(post);
+                    }
                 }
             }
         }
