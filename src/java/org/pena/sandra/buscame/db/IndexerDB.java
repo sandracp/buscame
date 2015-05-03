@@ -22,7 +22,7 @@ import org.pena.sandra.buscame.model.Vocabulary;
  * @author sandra
  */
 public class IndexerDB {
-    public static HashMap<String, Vocabulary> allVocabulary;
+    public HashMap<String, Vocabulary> allVocabulary;
     public static String pathFormat = "jdbc:h2:~/%s";
     public static String fileName;
     private static IndexerDB instance;
@@ -35,6 +35,7 @@ public class IndexerDB {
             }
             instance = new IndexerDB();
             instance.configureDB();
+            instance.loadVocabulary();
         }
         return instance;
     }
@@ -50,7 +51,6 @@ public class IndexerDB {
     
     public IndexerDB() throws ClassNotFoundException, SQLException {
         Class.forName("org.h2.Driver");
-        allVocabulary = new HashMap<String, Vocabulary>();
     }
 
     public void configureDB() throws ClassNotFoundException, SQLException {
@@ -72,29 +72,29 @@ public class IndexerDB {
         statement.close();
     }
 
-    public List<Post> getPostsByWord(String word) throws Exception {
+    public List<Post> getPostsByWord(String word, int max) throws SQLException {
         Statement statement = getConnection().createStatement();
-        String query = String.format("select * from posteo where word='%s' order by tf desc", word);
-        List<Post> results;
+        String query = String.format("select top %d * from posteo where word='%s' order by tf desc", max, word);
+        List<Post> results= new LinkedList<>();
         try (ResultSet r = statement.executeQuery(query)) {
-            results = new LinkedList<>();
-            while (r.next()) {
-                Post post= new Post(r.getString("word"), 
-                        r.getString("document"),
-                        r.getInt("tf"));
-                results.add(post);
+            if (r != null) {
+                while (r.next()) {
+                    Post post= new Post(r.getString("word"), 
+                            r.getString("document"),
+                            r.getInt("tf"));
+                    results.add(post);
+                }
             }
         }
         close();
         return results;
     }
     
-    public HashMap<String, Vocabulary> loadVocabulary() throws Exception {
+    public HashMap<String, Vocabulary> loadVocabulary() throws SQLException {
         Statement statement = getConnection().createStatement();
         String query = "select word, count(*) as nr, max(tf) as maxtf from posteo group by word";
-        HashMap<String, Vocabulary> results;
+        HashMap<String, Vocabulary> results = new HashMap<String, Vocabulary>();
         try (ResultSet r = statement.executeQuery(query)) {
-           results = new HashMap<String, Vocabulary>();
             while (r.next()) {
                 Vocabulary voc= new Vocabulary(r.getString("word"), 
                         r.getInt("nr"),
@@ -103,6 +103,7 @@ public class IndexerDB {
             }
         }
         close();
+        allVocabulary = results;
         return results;
     }
     

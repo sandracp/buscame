@@ -57,7 +57,7 @@ public class IndexerTest {
         String[] files = new String[] {};
         Indexer instance = new Indexer();
         instance.parseFiles(dir, files);
-        assertEquals(2008319, IndexerDB.allVocabulary.size());
+        assertEquals(2008319, IndexerDB.getInstance().allVocabulary.size());
     }
     
     @Test
@@ -66,7 +66,7 @@ public class IndexerTest {
         String[] files = new String[] {};
         Indexer instance = new Indexer();
         instance.parseFiles(dir, files);
-        assertEquals(370545, IndexerDB.allVocabulary.size());
+        assertEquals(370545, IndexerDB.getInstance().allVocabulary.size());
     }
     
     private void writeText(String dir, String fileName, String text) throws IOException {
@@ -84,7 +84,7 @@ public class IndexerTest {
         
         Indexer instance = new Indexer();
         instance.parseFiles(dir, files);
-        assertEquals(6, IndexerDB.allVocabulary.size());
+        assertEquals(6, IndexerDB.getInstance().allVocabulary.size());
     }
     
     @Test
@@ -97,12 +97,16 @@ public class IndexerTest {
         
         Indexer instance = new Indexer();
         instance.parseFiles(dir, files);
-        assertEquals(11, IndexerDB.allVocabulary.size());
+        assertEquals(11, IndexerDB.getInstance().allVocabulary.size());
         
-        List<Post> posteos = IndexerDB.getInstance().getPostsByWord("Mi");
+        List<Post> posteos = IndexerDB.getInstance().getPostsByWord("Mi", 1);
         assertEquals("Mi", posteos.get(0).getWord());
-        assertEquals("buscame-test2.txt", posteos.get(0).getDocument());
+        assertEquals("/tmp/buscame-test2.txt", posteos.get(0).getDocument());
         assertEquals(2, posteos.get(0).getTf());
+        
+        posteos = IndexerDB.getInstance().getPostsByWord("texto", 1);
+        assertEquals(2, posteos.size());
+        
     }
     
 }

@@ -29,35 +29,19 @@ public class Indexer {
     /**
      * Method para leer un archivo y almacenar un array.
      *
-     * @param filePath : source file path
+     * @param dirPath
      * @throws FileNotFoundException
      * @throws IOException
      */
-    @SuppressWarnings("empty-statement")
     public void parseFiles(String dirPath, final String[] filesNames) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
-        BufferedReader in = null;
-        File dir = new File(dirPath);
-        File[] files;
-        if (filesNames.length == 0) {
-            files = dir.listFiles(); //parseo todos los archivos
-        } else {
-            files = dir.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    for (String fileName : filesNames) {
-                        if (fileName.equals(name)) {
-                            return true;
-                        }
-                    };
-                    return false;
-                }
-            });
-        }
+        HashMap<String, Vocabulary> allVocabulary = IndexerDB.getInstance().allVocabulary;
+        File[] files = getFilesToParse(dirPath, filesNames);
 
         for (File f : files) {
             String fileName = f.getName();
             String filePath = f.getAbsolutePath();
             if (fileName.endsWith(".txt")) {
-                in = new BufferedReader(new FileReader(f));
+                BufferedReader in = new BufferedReader(new FileReader(f));
                 StringBuilder sb = new StringBuilder();
                 String s;
                 HashMap<String, Post> posts = new HashMap<>();
@@ -69,11 +53,11 @@ public class Indexer {
                 for (String term : tokenizedTerms) { //recorro los terminos del archivo
                     if (isValidTerm(term)) {
                         Vocabulary voc;
-                        if (IndexerDB.allVocabulary.containsKey(term)) { //allTerms es todo mi vocabulario
-                            voc = IndexerDB.allVocabulary.get(term);
+                        if (allVocabulary.containsKey(term)) { //allTerms es todo mi vocabulario
+                            voc = allVocabulary.get(term);
                         } else { //termino no existe
                             voc = new Vocabulary(term);
-                            IndexerDB.allVocabulary.put(term, voc); //Agrego nuevo vocabulario a la lista
+                            allVocabulary.put(term, voc); //Agrego nuevo vocabulario a la lista
                         }
 
                         Post post;
@@ -100,12 +84,32 @@ public class Indexer {
     }
 
     /*
-    Agregar reglas aca que hagan que una palabra no sea valida
-    */
+     Agregar reglas aca que hagan que una palabra no sea valida
+     */
     private boolean isValidTerm(String term) {
         if (term.length() < 100) {
             return true;
         }
         return false;
+    }
+
+    private File[] getFilesToParse(String dirPath, final String[] filesNames) {
+        File dir = new File(dirPath);
+        File[] files;
+        if (filesNames.length == 0) {
+            files = dir.listFiles(); //parseo todos los archivos
+        } else {
+            files = dir.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    for (String fileName : filesNames) {
+                        if (fileName.equals(name)) {
+                            return true;
+                        }
+                    };
+                    return false;
+                }
+            });
+        }
+        return files;
     }
 }
