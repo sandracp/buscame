@@ -41,7 +41,6 @@ public class Indexer {
             String fileName = f.getName();
             String filePath = f.getAbsolutePath();
             if (!IndexerDB.getInstance().wasParsed(filePath)) {
-                System.out.println(f.getAbsolutePath());
                 if (fileName.endsWith(".txt")) {
                     BufferedReader in = new BufferedReader(new FileReader(f));
                     StringBuilder sb = new StringBuilder();
@@ -49,11 +48,10 @@ public class Indexer {
                     HashMap<String, Post> posts = new HashMap<>();
 
                     while ((s = in.readLine()) != null) {
-                        sb.append(s); //acumulo todas las lineas del archivo
+                        sb.append(s.toLowerCase()); //acumulo todas las lineas del archivo
                     }
                     String[] tokenizedTerms = sb.toString().split("\\W");   //obtengo una palabra
                     for (String term : tokenizedTerms) { //recorro los terminos del archivo
-                        term = term.toLowerCase(); // paso todo a minuscula
                         if (isValidTerm(term)) {
                             Vocabulary voc;
                             if (allVocabulary.containsKey(term)) { //allTerms es todo mi vocabulario
@@ -81,10 +79,11 @@ public class Indexer {
                     for (Post post : posts.values()) {
                         IndexerDB.getInstance().save(post);
                     }
+                    
+                    IndexerDB.getInstance().commit();
                 }
             }
         }
-        IndexerDB.getInstance().commit();
     }
 
     /*

@@ -45,7 +45,7 @@ public class Searcher {
         String[] words = sentence.split("\\W");
         ArrayList<Vocabulary> searchVocabulary = new ArrayList<>();
         for (String word: words) {
-            Vocabulary voc = IndexerDB.getInstance().allVocabulary.get(word);
+            Vocabulary voc = IndexerDB.getInstance().allVocabulary.get(word.toLowerCase());
             if (voc != null) {
                 searchVocabulary.add(voc);
             }

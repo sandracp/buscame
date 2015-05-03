@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.pena.sandra.buscame.db.IndexerDB;
 import org.pena.sandra.buscame.rules.Indexer;
 
 /**
@@ -39,7 +40,6 @@ public class IndexerServlet extends HttpServlet {
         String destination;
         try {
             String dirPath = request.getParameter("directory-to-index");
-            dirPath = "/home/javier/src/sandra/buscame/DocumentosTP2";
             DateTime start = DateTime.now();
             Indexer indexer = new Indexer();
             String[] files = request.getParameterValues("files-to-index");
@@ -47,6 +47,7 @@ public class IndexerServlet extends HttpServlet {
             DateTime end = DateTime.now();
             Duration duration = new Duration(start, end);
             request.setAttribute("duration", duration.getStandardSeconds());
+            request.setAttribute("vocabulary", IndexerDB.getInstance().allVocabulary.size());
             destination = "/indexer.jsp";
         } catch (Exception ex) {
             // Aca redireccionar a la pagina de error

@@ -18,16 +18,15 @@ public class Vocabulary {
     private int maxTf;
 
     public Vocabulary(String term) {
-        this.term = term;
+        this.term = term.toLowerCase();
         this.maxTf = 0;
         this.nr = 0;
     }
 
     public Vocabulary(String term, int nr, int maxTf) {
-        this.term = term;
+        this.term = term.toLowerCase();
         this.nr = nr;
         this.maxTf = maxTf;
-          
     }
     
     public String getTerm() {
@@ -35,7 +34,7 @@ public class Vocabulary {
     }
 
     public void setTerm(String term) {
-        this.term = term;
+        this.term = term.toLowerCase();
     }
 
     public int getMaxTf() {
