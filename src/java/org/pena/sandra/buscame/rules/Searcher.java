@@ -8,12 +8,10 @@ package org.pena.sandra.buscame.rules;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.pena.sandra.buscame.db.IndexerDB;
 import org.pena.sandra.buscame.model.Post;
-import org.pena.sandra.buscame.model.Result;
 
 /**
  *
@@ -23,10 +21,12 @@ public class Searcher {
 
     public List<Post> search(String sentence) {
         try {
-            String[] words = sentence.split("\\W");
+           String[] words = sentence.split("\\W");
+           List<Post> posts = new LinkedList<>();
             for (String word: words) {
-                List<Post> posts = IndexerDB.getInstance().get(word);
+                posts = IndexerDB.getInstance().getPostsByWord(word);
             }
+            return posts;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Searcher.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

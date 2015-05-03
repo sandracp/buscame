@@ -72,9 +72,9 @@ public class IndexerDB {
         statement.close();
     }
 
-    public List<Post> get(String word) throws Exception {
+    public List<Post> getPostsByWord(String word) throws Exception {
         Statement statement = getConnection().createStatement();
-        String query = String.format("select * from posteo where word='%s'", word);
+        String query = String.format("select * from posteo where word='%s' order by tf desc", word);
         List<Post> results;
         try (ResultSet r = statement.executeQuery(query)) {
             results = new LinkedList<>();
