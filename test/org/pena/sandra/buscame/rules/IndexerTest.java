@@ -99,7 +99,7 @@ public class IndexerTest {
         HashMap<String, Vocabulary> vocabulary = instance.parseFiles(dir, files);
         assertEquals(11, vocabulary.size());
         
-        List<Post> posteos = IndexerDB.getInstance().get("Mi");
+        List<Post> posteos = IndexerDB.getInstance().getPostsByWord("Mi");
         assertEquals("Mi", posteos.get(0).getWord());
         assertEquals("buscame-test2.txt", posteos.get(0).getDocument());
         assertEquals(2, posteos.get(0).getTf());

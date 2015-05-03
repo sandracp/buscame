@@ -23,7 +23,7 @@ public class Searcher {
 
     public List<Post> search(String word) {
         try {
-            return IndexerDB.getInstance().get(word);
+            return IndexerDB.getInstance().getPostsByWord(word);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Searcher.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
