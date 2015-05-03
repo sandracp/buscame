@@ -53,7 +53,7 @@ public class IndexerTest {
      */
     @Test
     public void testParseFiles() throws Exception {
-        String dir = "/home/javier/src/sandra/buscame/DocumentosTP1";
+        String dir = "/home/sandra/buscame/DocumentosTP1";
         String[] files = new String[] {};
         Indexer instance = new Indexer();
         HashMap<String, Vocabulary> allTerms = instance.parseFiles(dir, files);

@@ -10,10 +10,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.lang.String;
 import org.h2.tools.DeleteDbFiles;
 import org.pena.sandra.buscame.model.Post;
+import org.pena.sandra.buscame.model.Vocabulary;
 /**
  *
  * @author sandra
@@ -78,6 +81,23 @@ public class IndexerDB {
                         r.getString("document"),
                         r.getInt("tf"));
                 results.add(post);
+            }
+        }
+        close();
+        return results;
+    }
+    
+    public HashMap<String, Vocabulary> loadVocabulary() throws Exception {
+        Statement statement = getConnection().createStatement();
+        String query = "select word, count(*) as nr, max(tf) as maxtf from posteo group by word";
+        HashMap<String, Vocabulary> results;
+        try (ResultSet r = statement.executeQuery(query)) {
+           results = new HashMap<String, Vocabulary>();
+            while (r.next()) {
+                Vocabulary voc= new Vocabulary(r.getString("word"), 
+                        r.getInt("nr"),
+                        r.getInt("maxtf"));
+                results.put(r.getString("word"), voc);
             }
         }
         close();

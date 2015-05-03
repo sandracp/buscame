@@ -22,6 +22,10 @@ public class Vocabulary {
         this.maxTf = 0;
         this.nr = 0;
     }
+
+    public Vocabulary(String string, int aInt, int aInt0) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     public String getTerm() {
         return term;
