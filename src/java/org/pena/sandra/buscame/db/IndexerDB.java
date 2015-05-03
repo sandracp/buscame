@@ -107,12 +107,15 @@ public class IndexerDB {
     
     public boolean wasParsed(String document) throws SQLException {
         Statement statement = getConnection().createStatement();
-        String query = "select count(*) as c from posteo where document='%s'";
+        String query = String.format("select count(*) as c from posteo where document='%s'", document);
         boolean result = false;
         try (ResultSet r = statement.executeQuery(query)) {
+            System.out.println(r);
             if(r.next()){
+                System.out.println(r.getInt("c"));
                 result = r.getInt("c") > 0;
             }
+            System.out.println(result);
         }
         close();
         return result;
