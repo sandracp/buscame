@@ -23,8 +23,11 @@ public class Vocabulary {
         this.nr = 0;
     }
 
-    public Vocabulary(String string, int aInt, int aInt0) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Vocabulary(String term, int nr, int maxTf) {
+        this.term = term;
+        this.nr = nr;
+        this.maxTf = maxTf;
+          
     }
     
     public String getTerm() {
