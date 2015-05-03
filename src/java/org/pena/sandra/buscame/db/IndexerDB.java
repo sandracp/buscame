@@ -104,6 +104,19 @@ public class IndexerDB {
         return results;
     }
     
+    public boolean wasParsed(String document) throws SQLException {
+        Statement statement = getConnection().createStatement();
+        String query = "select count(*) as cantidad from posteo where document='%s'";
+        boolean result = false;
+        try (ResultSet r = statement.executeQuery(query)) {
+            if(r.next()){
+                result = r.getInt("cantidad") > 0;
+            }
+        }
+        close();
+        return result;
+    }
+    
     public static void deleteDatabase() {
         DeleteDbFiles.execute("~", fileName, true);
     }
