@@ -56,8 +56,8 @@ public class IndexerTest {
         String dir = "/home/sandra/buscame/DocumentosTP1";
         String[] files = new String[] {};
         Indexer instance = new Indexer();
-        HashMap<String, Vocabulary> allTerms = instance.parseFiles(dir, files);
-        assertEquals(2008319, allTerms.size());
+        instance.parseFiles(dir, files);
+        assertEquals(2008319, IndexerDB.allVocabulary.size());
     }
     
     @Test
@@ -65,8 +65,8 @@ public class IndexerTest {
         String dir = "/home/javier/src/sandra/buscame/DocumentosTP2";
         String[] files = new String[] {};
         Indexer instance = new Indexer();
-        HashMap<String, Vocabulary> allTerms = instance.parseFiles(dir, files);
-        assertEquals(370545, allTerms.size());
+        instance.parseFiles(dir, files);
+        assertEquals(370545, IndexerDB.allVocabulary.size());
     }
     
     private void writeText(String dir, String fileName, String text) throws IOException {
@@ -83,8 +83,8 @@ public class IndexerTest {
         String[] files = new String[] {"buscame-test1.txt"};
         
         Indexer instance = new Indexer();
-        HashMap<String, Vocabulary> vocabulary = instance.parseFiles(dir, files);
-        assertEquals(6, vocabulary.size());
+        instance.parseFiles(dir, files);
+        assertEquals(6, IndexerDB.allVocabulary.size());
     }
     
     @Test
@@ -96,8 +96,8 @@ public class IndexerTest {
         String[] files = new String[] {"buscame-test2.txt", "buscame-test3.txt"};
         
         Indexer instance = new Indexer();
-        HashMap<String, Vocabulary> vocabulary = instance.parseFiles(dir, files);
-        assertEquals(11, vocabulary.size());
+        instance.parseFiles(dir, files);
+        assertEquals(11, IndexerDB.allVocabulary.size());
         
         List<Post> posteos = IndexerDB.getInstance().get("Mi");
         assertEquals("Mi", posteos.get(0).getWord());

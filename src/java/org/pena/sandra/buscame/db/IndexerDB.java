@@ -22,6 +22,7 @@ import org.pena.sandra.buscame.model.Vocabulary;
  * @author sandra
  */
 public class IndexerDB {
+    public static HashMap<String, Vocabulary> allVocabulary;
     public static String pathFormat = "jdbc:h2:~/%s";
     public static String fileName;
     private static IndexerDB instance;
@@ -49,6 +50,7 @@ public class IndexerDB {
     
     public IndexerDB() throws ClassNotFoundException, SQLException {
         Class.forName("org.h2.Driver");
+        allVocabulary = new HashMap<String, Vocabulary>();
     }
 
     public void configureDB() throws ClassNotFoundException, SQLException {

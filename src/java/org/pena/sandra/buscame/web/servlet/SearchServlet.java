@@ -35,10 +35,10 @@ public class SearchServlet extends HttpServlet {
             throws ServletException, IOException {
         // Aqui consultariamos a la base de datos que conoce para cada palabra, los resultados
 
-        String word = request.getParameter("editbox_search");
+        String sentence = request.getParameter("editbox_search");
         String destination;
         try {
-            List<Post> results = new Searcher().search(word);
+            List<Post> results = new Searcher().search(sentence);
             request.setAttribute("results", results);
             destination = "/index.jsp";
         } catch (Exception ex) {

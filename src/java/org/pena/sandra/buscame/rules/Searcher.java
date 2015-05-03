@@ -21,9 +21,12 @@ import org.pena.sandra.buscame.model.Result;
  */
 public class Searcher {
 
-    public List<Post> search(String word) {
+    public List<Post> search(String sentence) {
         try {
-            return IndexerDB.getInstance().get(word);
+            String[] words = sentence.split("\\W");
+            for (String word: words) {
+                List<Post> posts = IndexerDB.getInstance().get(word);
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Searcher.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

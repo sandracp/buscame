@@ -23,11 +23,7 @@ import org.pena.sandra.buscame.model.Vocabulary;
  */
 public class Indexer {
 
-    private HashMap<String, Vocabulary> allTerms; //to hold all terms
-    private HashMap<String, Post> n;
-
     public Indexer() {
-        allTerms = new HashMap<String, Vocabulary>(); //to hold all terms
     }
 
     /**
@@ -38,7 +34,7 @@ public class Indexer {
      * @throws IOException
      */
     @SuppressWarnings("empty-statement")
-    public HashMap<String, Vocabulary> parseFiles(String dirPath, final String[] filesNames) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    public void parseFiles(String dirPath, final String[] filesNames) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         BufferedReader in = null;
         File dir = new File(dirPath);
         File[] files;
@@ -73,11 +69,11 @@ public class Indexer {
                 for (String term : tokenizedTerms) { //recorro los terminos del archivo
                     if (isValidTerm(term)) {
                         Vocabulary voc;
-                        if (allTerms.containsKey(term)) { //allTerms es todo mi vocabulario
-                            voc = allTerms.get(term);
+                        if (IndexerDB.allVocabulary.containsKey(term)) { //allTerms es todo mi vocabulario
+                            voc = IndexerDB.allVocabulary.get(term);
                         } else { //termino no existe
                             voc = new Vocabulary(term);
-                            allTerms.put(term, voc); //Agrego nuevo vocabulario a la lista
+                            IndexerDB.allVocabulary.put(term, voc); //Agrego nuevo vocabulario a la lista
                         }
 
                         Post post;
@@ -101,7 +97,6 @@ public class Indexer {
             }
         }
         IndexerDB.getInstance().commit();
-        return allTerms;
     }
 
     /*
