@@ -17,18 +17,29 @@ import java.lang.String;
 import org.h2.tools.DeleteDbFiles;
 import org.pena.sandra.buscame.model.Post;
 import org.pena.sandra.buscame.model.Vocabulary;
+
 /**
  *
  * @author sandra
  */
 public class IndexerDB {
+
     public HashMap<String, Vocabulary> allVocabulary;
     public static String pathFormat = "jdbc:h2:~/%s";
     public static String fileName;
     private static IndexerDB instance;
     private Connection conn;
-    
-    public static IndexerDB getInstance () throws ClassNotFoundException, SQLException {
+    private int totalDocuments;
+
+    public void setTotalDocuments(int totalDocuments) {
+        this.totalDocuments = totalDocuments;
+    }
+
+    public int getTotalDocuments() {
+        return totalDocuments;
+    }
+
+    public static IndexerDB getInstance() throws ClassNotFoundException, SQLException {
         if (instance == null) {
             if (fileName == null) {
                 fileName = "buscame";
@@ -39,16 +50,16 @@ public class IndexerDB {
         }
         return instance;
     }
-    
-    private Connection getConnection () throws SQLException {
+
+    private Connection getConnection() throws SQLException {
         if (conn == null || conn.isClosed()) {
             conn = DriverManager.getConnection(
-            String.format(pathFormat, fileName), "sa", "");
+                    String.format(pathFormat, fileName), "sa", "");
             conn.setAutoCommit(false);
         }
         return conn;
     }
-    
+
     public IndexerDB() throws ClassNotFoundException, SQLException {
         Class.forName("org.h2.Driver");
     }
@@ -61,10 +72,10 @@ public class IndexerDB {
             } catch (SQLException sqle) {
                 System.out.println("Table couldn't be created");
             }
-        }    
+        }
     }
 
-    public void save(Post post)  throws SQLException {
+    public void save(Post post) throws SQLException {
         Statement statement = getConnection().createStatement();
         String query = String.format("insert into posteo(word, document, tf) values ('%s', '%s', %d);",
                 post.getWord(), post.getDocument(), post.getTf());
@@ -75,26 +86,26 @@ public class IndexerDB {
     public List<Post> getPostsByWord(String word, int max) throws SQLException {
         Statement statement = getConnection().createStatement();
         String query = String.format("select top %d word, document, tf from posteo where word='%s' order by tf desc", max, word);
-        List<Post> results= new LinkedList<>();
+        List<Post> results = new LinkedList<>();
         ResultSet r = statement.executeQuery(query);
         while (r.next()) {
-            Post post= new Post(r.getString("word"), 
+            Post post = new Post(r.getString("word"),
                     r.getString("document"),
                     r.getInt("tf"));
             results.add(post);
         }
-        
+
         close();
         return results;
     }
-    
+
     public HashMap<String, Vocabulary> loadVocabulary() throws SQLException {
         Statement statement = getConnection().createStatement();
         String query = "select word, count(*) as nr, max(tf) as maxtf from posteo group by word";
         HashMap<String, Vocabulary> results = new HashMap<String, Vocabulary>();
         try (ResultSet r = statement.executeQuery(query)) {
             while (r.next()) {
-                Vocabulary voc= new Vocabulary(r.getString("word"), 
+                Vocabulary voc = new Vocabulary(r.getString("word"),
                         r.getInt("nr"),
                         r.getInt("maxtf"));
                 results.put(r.getString("word"), voc);
@@ -104,27 +115,37 @@ public class IndexerDB {
         allVocabulary = results;
         return results;
     }
-    
+
     public boolean wasParsed(String document) throws SQLException {
         Statement statement = getConnection().createStatement();
         String query = String.format("select count(*) as c from posteo where document='%s'", document);
         boolean result = false;
         try (ResultSet r = statement.executeQuery(query)) {
-            System.out.println(r);
-            if(r.next()){
-                System.out.println(r.getInt("c"));
+            if (r.next()) {
                 result = r.getInt("c") > 0;
             }
-            System.out.println(result);
         }
         close();
         return result;
     }
-    
+
+    public int countDocuments() throws SQLException {
+        Statement statement = getConnection().createStatement();
+        String query = "select count(distinct document) as c from posteo";
+        int result = 0;
+        try (ResultSet r = statement.executeQuery(query)) {
+            if (r.next()) {
+                result = r.getInt("c");
+            }
+        }
+        close();
+        return result;
+    }
+
     public static void deleteDatabase() {
         DeleteDbFiles.execute("~", fileName, true);
     }
-    
+
     public synchronized void commit() {
         try {
             this.conn.commit();

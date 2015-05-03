@@ -55,7 +55,7 @@ public class Searcher {
                 Vocabulary first = ((Vocabulary)a);
                 Vocabulary second =((Vocabulary)b);
                 // menor a mayor Nr
-                return first.getNr() - second.getNr();
+                return first.getNr() - second.getNr(); 
             }
         }); 
         return searchVocabulary;
