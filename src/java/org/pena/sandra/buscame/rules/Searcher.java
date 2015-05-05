@@ -97,6 +97,9 @@ public class Searcher {
         for (Post post: candidates) {
             Vocabulary voc = allVocabulary.get(post.getWord());
             double div = (N * 1.0) / (voc.getNr() * 1.0);
+            
+            System.out.println(String.format("N: %d, nr: %d, div: %f", 
+                    N, voc.getNr(), div));
             double weight = post.getTf() * Math.log10(div);
             Result result;
             if (results.containsKey(post.getDocument())) {

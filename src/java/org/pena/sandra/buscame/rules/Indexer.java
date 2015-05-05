@@ -81,6 +81,7 @@ public class Indexer {
                     }
                     
                     IndexerDB.getInstance().commit();
+                    IndexerDB.getInstance().incrementTotalDocuments();
                 }
             }
         }

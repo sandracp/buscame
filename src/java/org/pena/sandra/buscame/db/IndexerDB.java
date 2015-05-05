@@ -161,4 +161,8 @@ public class IndexerDB {
         } catch (SQLException ex) {
         }
     }
+
+    public void incrementTotalDocuments() {
+        this.totalDocuments += 1;
+    }
 }
