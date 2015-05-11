@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pena.sandra.buscame.rules;
+package utn.frc.dlc.buscame.rules;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,14 +16,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.pena.sandra.buscame.db.IndexerDB;
-import org.pena.sandra.buscame.model.Post;
-import org.pena.sandra.buscame.model.Result;
-import org.pena.sandra.buscame.model.Vocabulary;
+import utn.frc.dlc.buscame.db.IndexerDB;
+import utn.frc.dlc.buscame.model.Post;
+import utn.frc.dlc.buscame.model.Result;
+import utn.frc.dlc.buscame.model.Vocabulary;
 
 /**
  *
- * @author sandra
+ * @author Peña - Ligorria
  */
 public class Searcher {
     private final int MAX_POSTS = 10;

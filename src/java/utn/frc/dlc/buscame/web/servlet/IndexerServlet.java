@@ -3,28 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pena.sandra.buscame.web.servlet;
+package utn.frc.dlc.buscame.web.servlet;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.HashMap;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.pena.sandra.buscame.model.Post;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import utn.frc.dlc.buscame.db.IndexerDB;
+import utn.frc.dlc.buscame.rules.Indexer;
 
 /**
  *
- * @author sandra
+ * @author Peña - Ligorria
  */
-public class DownloadFileServlet extends HttpServlet {
+@WebServlet(name = "IndexerServlet", urlPatterns = {"/IndexerServlet"})
+public class IndexerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,23 +37,26 @@ public class DownloadFileServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String path = request.getParameter("path");
-        String fileName = request.getParameter("fileName");
-        response.setContentType("text/plain");
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-        PrintWriter out = response.getWriter();
-        System.out.println(path);
+        String destination;
         try {
-            BufferedReader in = new BufferedReader(new FileReader(new File(path)));
-            StringBuilder sb = new StringBuilder();
-            String s;
-            while ((s = in.readLine()) != null) {
-                out.println(s);
-            }
-            out.flush();
-        }finally {
-            out.close();
+            String dirPath = request.getParameter("directory-to-index");
+            DateTime start = DateTime.now();
+            Indexer indexer = new Indexer();
+            String[] files = request.getParameterValues("files-to-index");
+            indexer.parseFiles(dirPath, files);
+            DateTime end = DateTime.now();
+            Duration duration = new Duration(start, end);
+            request.setAttribute("duration", duration.getStandardSeconds());
+            request.setAttribute("vocabulary", IndexerDB.getInstance().allVocabulary.size());
+            destination = "/indexer.jsp";
+        } catch (Exception ex) {
+            // Aca redireccionar a la pagina de error
+           request.setAttribute("error", ex.toString());
+           destination = "/error.jsp";
         }
+        ServletContext app = this.getServletContext();
+        RequestDispatcher disp = app.getRequestDispatcher(destination);
+        disp.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

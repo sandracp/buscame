@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pena.sandra.buscame.model;
+package utn.frc.dlc.buscame.model;
 
 import java.util.HashMap;
 import java.util.TreeSet;
 
 /**
  *
- * @author sandra
+ * @author Peña - Ligorria
  */
 public class Vocabulary {
     private String term; 

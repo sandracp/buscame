@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pena.sandra.buscame.rules;
+package utn.frc.dlc.buscame.rules;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,14 +12,14 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import org.pena.sandra.buscame.db.IndexerDB;
-import org.pena.sandra.buscame.model.Post;
-import org.pena.sandra.buscame.model.Vocabulary;
+import utn.frc.dlc.buscame.db.IndexerDB;
+import utn.frc.dlc.buscame.model.Post;
+import utn.frc.dlc.buscame.model.Vocabulary;
 
 /**
  * Class to read documents
  *
- * @author sandra
+ * @author Peña - Ligorria
  */
 public class Indexer {
 
@@ -88,7 +88,7 @@ public class Indexer {
     }
 
     /*
-     Agregar reglas aca que hagan que una palabra no sea valida
+     * Reglas que hacen que una palabra no sea valida
      */
     private boolean isValidTerm(String term) {
         if (term.length() < 100) {

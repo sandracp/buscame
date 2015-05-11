@@ -2,15 +2,15 @@
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>org.pena.sandra.buscame.web.servlet.SearchServlet</servlet-class>
+        <servlet-class>utn.frc.dlc.buscame.web.servlet.SearchServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>IndexerServlet</servlet-name>
-        <servlet-class>org.pena.sandra.buscame.web.servlet.IndexerServlet</servlet-class>
+        <servlet-class>utn.frc.dlc.buscame.web.servlet.IndexerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DownloadFileServlet</servlet-name>
-        <servlet-class>org.pena.sandra.buscame.web.servlet.DownloadFileServlet</servlet-class>
+        <servlet-class>utn.frc.dlc.buscame.web.servlet.DownloadFileServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>

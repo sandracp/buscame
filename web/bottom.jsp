@@ -10,7 +10,7 @@
             <div id="prefooter">
             </div>
             <div id="footer">
-                <div class="padding"> Copyright &copy; 2015 Buscame | Design: <a href="http://www.free-css-templates.com">David Herreman </a> | <a href="https://github.com/sandracp/buscame">Sandra Pena</a> </div>
+                <div class="padding"> Copyright &copy; 2015 Buscame | Design: <a href="http://www.free-css-templates.com">David Herreman </a> | <a href="https://github.com/sandracp/buscame">Sandra Peña - Gino Ligorria</a> </div>
             </div>
         </div>
     </body>

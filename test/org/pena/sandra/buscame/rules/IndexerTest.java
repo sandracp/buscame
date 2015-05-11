@@ -5,6 +5,7 @@
  */
 package org.pena.sandra.buscame.rules;
 
+import utn.frc.dlc.buscame.rules.Indexer;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -17,9 +18,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.pena.sandra.buscame.db.IndexerDB;
-import org.pena.sandra.buscame.model.Post;
-import org.pena.sandra.buscame.model.Vocabulary;
+import utn.frc.dlc.buscame.db.IndexerDB;
+import utn.frc.dlc.buscame.model.Post;
+import utn.frc.dlc.buscame.model.Vocabulary;
 
 /**
  *

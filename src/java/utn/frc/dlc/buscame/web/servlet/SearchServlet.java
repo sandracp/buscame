@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pena.sandra.buscame.web.servlet;
+package utn.frc.dlc.buscame.web.servlet;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -14,13 +14,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.pena.sandra.buscame.model.Post;
-import org.pena.sandra.buscame.model.Result;
-import org.pena.sandra.buscame.rules.Searcher;
+import utn.frc.dlc.buscame.model.Post;
+import utn.frc.dlc.buscame.model.Result;
+import utn.frc.dlc.buscame.rules.Searcher;
 
 /**
  *
- * @author sandra
+ * @author Peña - Ligorria
  */
 public class SearchServlet extends HttpServlet {
 

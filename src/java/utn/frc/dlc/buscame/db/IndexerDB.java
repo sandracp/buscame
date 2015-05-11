@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pena.sandra.buscame.db;
+package utn.frc.dlc.buscame.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,12 +15,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.lang.String;
 import org.h2.tools.DeleteDbFiles;
-import org.pena.sandra.buscame.model.Post;
-import org.pena.sandra.buscame.model.Vocabulary;
+import utn.frc.dlc.buscame.model.Post;
+import utn.frc.dlc.buscame.model.Vocabulary;
 
 /**
  *
- * @author sandra
+ * @author Peña - Ligorria
  */
 public class IndexerDB {
 

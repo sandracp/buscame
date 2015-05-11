@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pena.sandra.buscame.model;
+package utn.frc.dlc.buscame.model;
 
 /**
  *
- * @author sandra
+ * @author Peña - Ligorria
  */
 public class Result {
     private String document;

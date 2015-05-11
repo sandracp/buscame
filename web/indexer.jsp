@@ -36,8 +36,9 @@
     </div>
     <c:if test="${not empty duration}">
     <div class="results">
-        <p>Duration: ${duration}s</p>
-        <p>Vocabulary Size: ${vocabulary}</p>
+        <br> </br>
+        <p>Duracion: ${duration}s</p>
+        <p>Vocabulario: ${vocabulary}</p>
     </div>
     </c:if>
     <jsp:include page="bottom.jsp"/>
