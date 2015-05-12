@@ -36,7 +36,6 @@
     </div>
     <c:if test="${not empty duration}">
     <div class="results">
-        <br> </br>
         <p>Duracion: ${duration}s</p>
         <p>Vocabulario: ${vocabulary}</p>
     </div>
